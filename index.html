@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>☕ Java 객체지향 개념 사전 | 1~5과</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+
+:root {
+  --bg: #0d1117;
+  --bg2: #161b22;
+  --bg3: #21262d;
+  --border: #30363d;
+  --text: #e6edf3;
+  --text2: #8b949e;
+  --text3: #6e7681;
+  --accent1: #58a6ff;
+  --accent2: #3fb950;
+  --accent3: #d2a8ff;
+  --accent4: #ffa657;
+  --accent5: #ff7b72;
+  --accent6: #79c0ff;
+  --glow1: rgba(88,166,255,0.15);
+  --glow2: rgba(63,185,80,0.15);
+  --glow3: rgba(210,168,255,0.15);
+  --glow4: rgba(255,166,87,0.15);
+  --glow5: rgba(255,123,114,0.15);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.7;
+}
+
+/* ── HEADER ── */
+.header {
+  background: linear-gradient(135deg, #0d1117 0%, #1a1f2e 50%, #0d1117 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 40px 20px 30px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 300px;
+  background: radial-gradient(ellipse, rgba(88,166,255,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.header-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(88,166,255,0.1);
+  border: 1px solid rgba(88,166,255,0.3);
+  border-radius: 999px;
+  padding: 6px 16px;
+  font-size: 0.8rem;
+  color: var(--accent1);
+  margin-bottom: 20px;
+  letter-spacing: 0.05em;
+}
+.header h1 {
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  font-weight: 900;
+  background: linear-gradient(135deg, #e6edf3 0%, #58a6ff 50%, #d2a8ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 12px;
+}
+.header p {
+  color: var(--text2);
+  font-size: 1rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* ── NAV ── */
+.nav-wrap {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(13,17,23,0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 20px;
+}
+.nav {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 12px 0;
+}
+.nav::-webkit-scrollbar { display: none; }
+.nav-btn {
+  flex-shrink: 0;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 8px 16px;
+  color: var(--text2);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.nav-btn:hover { background: var(--bg3); color: var(--text); border-color: var(--border); }
+.nav-btn.active { background: rgba(88,166,255,0.12); color: var(--accent1); border-color: rgba(88,166,255,0.4); }
+
+/* ── MAIN ── */
+.main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 20px 80px;
+}
+
+/* ── CHAPTER SECTION ── */
+.chapter { display: none; }
+.chapter.visible { display: block; }
+
+.chapter-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+.chapter-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+.chapter-title { font-size: 1.6rem; font-weight: 800; }
+.chapter-sub { color: var(--text2); font-size: 0.9rem; margin-top: 2px; }
+
+/* ── CONCEPT GRID ── */
+.concept-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.concept-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.concept-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.concept-card:hover {
+  border-color: rgba(88,166,255,0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+.concept-card:hover::before { opacity: 1; }
+
+.concept-card.blue::before { background: linear-gradient(90deg, var(--accent1), transparent); }
+.concept-card.green::before { background: linear-gradient(90deg, var(--accent2), transparent); }
+.concept-card.purple::before { background: linear-gradient(90deg, var(--accent3), transparent); }
+.concept-card.orange::before { background: linear-gradient(90deg, var(--accent4), transparent); }
+.concept-card.red::before { background: linear-gradient(90deg, var(--accent5), transparent); }
+
+.concept-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  margin-bottom: 10px;
+  letter-spacing: 0.04em;
+}
+.label-blue { background: rgba(88,166,255,0.12); color: var(--accent1); border: 1px solid rgba(88,166,255,0.25); }
+.label-green { background: rgba(63,185,80,0.12); color: var(--accent2); border: 1px solid rgba(63,185,80,0.25); }
+.label-purple { background: rgba(210,168,255,0.12); color: var(--accent3); border: 1px solid rgba(210,168,255,0.25); }
+.label-orange { background: rgba(255,166,87,0.12); color: var(--accent4); border: 1px solid rgba(255,166,87,0.25); }
+.label-red { background: rgba(255,123,114,0.12); color: var(--accent5); border: 1px solid rgba(255,123,114,0.25); }
+
+.concept-term {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+.concept-def {
+  font-size: 0.9rem;
+  color: var(--text2);
+  line-height: 1.75;
+}
+.concept-def strong { color: var(--text); font-weight: 600; }
+
+/* ── CODE BLOCK ── */
+.code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-top: 10px;
+  overflow-x: auto;
+  color: #e6edf3;
+  line-height: 1.6;
+}
+.code .kw { color: #ff7b72; }
+.code .ty { color: #ffa657; }
+.code .cm { color: #6e7681; }
+.code .st { color: #a5d6ff; }
+.code .nm { color: #79c0ff; }
+.code .val { color: #a5d6ff; }
+
+/* ── TABLE ── */
+.concept-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  margin-top: 10px;
+  background: var(--bg3);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.concept-table th {
+  background: rgba(88,166,255,0.1);
+  color: var(--accent1);
+  padding: 10px 14px;
+  text-align: left;
+  font-weight: 700;
+  border-bottom: 1px solid var(--border);
+}
+.concept-table td {
+  padding: 8px 14px;
+  border-bottom: 1px solid rgba(48,54,61,0.5);
+  color: var(--text2);
+}
+.concept-table tr:last-child td { border-bottom: none; }
+.concept-table td:first-child { color: var(--text); font-weight: 600; font-family: 'JetBrains Mono', monospace; }
+.concept-table tr:hover td { background: rgba(88,166,255,0.04); }
+
+/* ── SECTION DIVIDER ── */
+.section-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--text);
+  margin: 32px 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ── HIGHLIGHT BOX ── */
+.highlight-box {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent1);
+  border-radius: 0 8px 8px 0;
+  padding: 16px 20px;
+  margin: 16px 0;
+  font-size: 0.9rem;
+  color: var(--text2);
+  line-height: 1.8;
+}
+.highlight-box.warn { border-left-color: var(--accent4); }
+.highlight-box.success { border-left-color: var(--accent2); }
+.highlight-box.purple { border-left-color: var(--accent3); }
+
+.highlight-box strong { color: var(--text); font-weight: 700; }
+
+/* ── FLOW ── */
+.flow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  font-size: 0.88rem;
+}
+.flow-step {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+.flow-arrow { color: var(--accent1); font-size: 1.1rem; }
+
+/* ── WIDE CARD ── */
+.wide-card {
+  grid-column: 1 / -1;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 22px;
+}
+
+/* ── COMPARISON ── */
+.compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 12px;
+}
+.compare-side {
+  background: var(--bg3);
+  border-radius: 8px;
+  padding: 14px;
+}
+.compare-side h4 {
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.compare-side ul {
+  list-style: none;
+  font-size: 0.85rem;
+  color: var(--text2);
+  line-height: 2;
+}
+.compare-side ul li::before { content: "→ "; color: var(--accent1); }
+
+/* ── SEARCH ── */
+.search-wrap {
+  margin-bottom: 28px;
+}
+.search-input {
+  width: 100%;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 18px 12px 44px;
+  color: var(--text);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 0.95rem;
+  transition: border-color 0.2s;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%238b949e' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 14px center;
+}
+.search-input:focus { outline: none; border-color: var(--accent1); box-shadow: 0 0 0 3px rgba(88,166,255,0.1); }
+.search-input::placeholder { color: var(--text3); }
+
+/* ── KEYWORD HIGHLIGHT ── */
+.hl { background: rgba(255,166,87,0.25); color: var(--accent4); border-radius: 3px; padding: 0 2px; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .concept-grid { grid-template-columns: 1fr; }
+  .compare-grid { grid-template-columns: 1fr; }
+  .chapter-title { font-size: 1.25rem; }
+  .flow { flex-direction: column; align-items: flex-start; }
+}
+
+/* ── SCROLL REVEAL ── */
+.fade-in {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.tag {
+  display: inline-block;
+  font-size: 0.72rem;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 700;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+.tag-exam { background: rgba(255,123,114,0.15); color: var(--accent5); border: 1px solid rgba(255,123,114,0.3); }
+.tag-key { background: rgba(63,185,80,0.15); color: var(--accent2); border: 1px solid rgba(63,185,80,0.3); }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-badge">☕ JAVA OOP · 동국대 객체지향프로그래밍</div>
+  <h1>Java 핵심 개념 사전</h1>
+  <p>1~5과 교안 기반 · 줄글 없이 카드로 깔끔하게 정리한 개념 학습 공간</p>
+</header>
+
+<nav class="nav-wrap">
+  <div class="nav" id="nav">
+    <button class="nav-btn active" data-chapter="all">🔍 전체 검색</button>
+    <button class="nav-btn" data-chapter="1">1과 · 자바의 개요</button>
+    <button class="nav-btn" data-chapter="2">2과 · 어휘구조와 자료형</button>
+    <button class="nav-btn" data-chapter="3">3과 · 연산자</button>
+    <button class="nav-btn" data-chapter="4">4과 · 제어문</button>
+    <button class="nav-btn" data-chapter="5">5과 · 클래스</button>
+  </div>
+</nav>
+
+<main class="main">
+
+<!-- ── 전체 검색 ── -->
+<section class="chapter visible" id="ch-all">
+  <div class="search-wrap">
+    <input class="search-input" id="searchInput" type="text" placeholder="개념, 키워드, 예시 코드를 검색해봐... (예: JVM, 기본형, 생성자)" />
+  </div>
+  <div id="searchResults"></div>
+  <div id="searchEmpty" style="text-align:center;color:var(--text2);padding:60px 20px;display:none;">
+    검색 결과가 없어요 🥲<br><small>다른 키워드로 시도해봐!</small>
+  </div>
+  <div id="searchPrompt" style="text-align:center;color:var(--text3);padding:60px 20px;">
+    🔍 위에서 개념을 검색하거나<br>탭을 눌러 챕터별로 공부해봐!
+  </div>
+</section>
+
+<!-- ── 1과 ── -->
+<section class="chapter" id="ch-1">
+  <div class="chapter-header">
+    <div class="chapter-icon" style="background:rgba(88,166,255,0.12);color:var(--accent1)">☕</div>
+    <div>
+      <div class="chapter-title">1과 · 자바의 개요</div>
+      <div class="chapter-sub">Java 언어의 역사, 특징, 플랫폼 종류, 주요 기능</div>
+    </div>
+  </div>
+
+  <div class="section-title">🌱 자바 언어란?</div>
+  <div class="concept-grid">
+
+    <div class="concept-card blue fade-in" data-search="자바 특징 소개 개요 범용 객체지향 플랫폼 독립">
+      <div class="concept-label label-blue">핵심 특징</div>
+      <div class="concept-term">자바의 3가지 핵심 특성</div>
+      <div class="concept-def">
+        <strong>① 범용 프로그래밍 언어</strong> — 인터넷·모바일 환경 특히 지원<br>
+        <strong>② 객체지향 언어</strong> — C++과 유사하되 복잡한 기능 제거<br>
+        <strong>③ 플랫폼 독립적</strong> — 바이트코드 + JVM으로 어느 OS에서도 실행
+      </div>
+    </div>
+
+    <div class="concept-card blue fade-in" data-search="James Gosling 자바 역사 그린 프로젝트 Sun Microsystems">
+      <div class="concept-label label-blue">역사</div>
+      <div class="concept-term">자바의 탄생<span class="tag tag-exam">시험출제</span></div>
+      <div class="concept-def">
+        개발자: <strong>James Gosling</strong> (Sun Microsystems)<br>
+        1990년 "그린 프로젝트(embedded system)"로 시작<br>
+        1991년 가전제품용 언어 → 이후 범용 언어로 발전<br>
+        이름 어원: 인도네시아산 커피 원료 이름에서 유래
+      </div>
+    </div>
+
+    <div class="concept-card green fade-in" data-search="바이트코드 JVM 가상기계 플랫폼 독립 실행">
+      <div class="concept-label label-green">실행 구조</div>
+      <div class="concept-term">바이트코드 & JVM<span class="tag tag-key">핵심</span></div>
+      <div class="concept-def">소스(.java) → 컴파일 → <strong>바이트코드(.class)</strong> → <strong>JVM</strong>이 실행</div>
+      <div class="flow">
+        <div class="flow-step">소스 코드<br><small>.java</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">javac 컴파일</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">바이트코드<br><small>.class</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">JVM 실행</div>
+      </div>
+    </div>
+
+    <div class="concept-card purple fade-in" data-search="OOP 객체지향 Data Abstraction Inheritance Polymorphism 다형성 상속">
+      <div class="concept-label label-purple">객체지향</div>
+      <div class="concept-term">OOP 3대 특성<span class="tag tag-exam">시험출제</span></div>
+      <div class="concept-def">
+        <strong>Data Abstraction</strong> — 자료 추상화 (클래스)<br>
+        <strong>Inheritance</strong> — 상속성<br>
+        <strong>Polymorphism</strong> — 다형성
+      </div>
+    </div>
+
+  </div>
+
+  <div class="section-title">📦 자바 플랫폼 종류</div>
+  <div class="concept-grid">
+    <div class="concept-card wide-card orange fade-in" data-search="플랫폼 SE EE ME Java Card 표준 엔터프라이즈 모바일 카드">
+      <div class="concept-label label-orange">플랫폼</div>
+      <div class="concept-term">자바 4가지 플랫폼<span class="tag tag-exam">시험출제</span></div>
+      <table class="concept-table">
+        <tr><th>플랫폼</th><th>Full Name</th><th>용도</th></tr>
+        <tr><td>Java SE</td><td>Standard Edition</td><td>일반 데스크탑·콘솔 애플리케이션</td></tr>
+        <tr><td>Java EE</td><td>Enterprise Edition</td><td>기업용 웹·서버 애플리케이션 (서블릿, EJB)</td></tr>
+        <tr><td>Java ME</td><td>Micro Edition</td><td>모바일·내장형 기기 (컨피그레이션 + 프로파일)</td></tr>
+        <tr><td>Java Card</td><td>Card Edition</td><td>스마트카드·SIM 카드용</td></tr>
+      </table>
+      <div class="highlight-box warn" style="margin-top:12px">
+        ⚠️ <strong>"자바 매크로 에디션"은 존재하지 않아!</strong> — 자주 나오는 함정 선지야.
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">🔧 개발 환경 vs 운영 환경</div>
+  <div class="concept-grid">
+    <div class="concept-card blue fade-in" data-search="개발환경 운영환경 에디터 디버거 컴파일러 인터프리터">
+      <div class="concept-label label-blue">환경 분류</div>
+      <div class="concept-term">프로그램 언어 시스템 구성</div>
+      <div class="compare-grid">
+        <div class="compare-side">
+          <h4 style="color:var(--accent3)">개발 환경 🛠</h4>
+          <ul><li>에디터 (코드 작성)</li><li>디버거 (오류 찾기)</li><li>클래스 브라우저</li></ul>
+        </div>
+        <div class="compare-side">
+          <h4 style="color:var(--accent1)">운영 환경 ⚙️</h4>
+          <ul><li><strong>컴파일러</strong> (번역)</li><li><strong>인터프리터</strong> (실행)</li><li>JVM</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="concept-card green fade-in" data-search="JDK Eclipse NetBeans 개발도구 IDE">
+      <div class="concept-label label-green">개발 도구</div>
+      <div class="concept-term">대표적인 자바 IDE<span class="tag tag-exam">시험출제</span></div>
+      <div class="concept-def">
+        <strong>JDK</strong> — Java Development Kit (기본 컴파일러+인터프리터)<br>
+        <strong>Eclipse</strong> — 오픈소스 통합 개발 환경<br>
+        <strong>NetBeans</strong> — 웹 마이크로시스템즈의 IDE<br><br>
+        ❌ 파워빌더(PowerBuilder) — 자바 개발 도구 아님!
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">⭐ 자바의 주요 기능</div>
+  <div class="concept-grid">
+    <div class="concept-card purple fade-in" data-search="예외처리 exception try catch finally">
+      <div class="concept-label label-purple">예외처리</div>
+      <div class="concept-term">예외(Exception) 처리</div>
+      <div class="concept-def">
+        프로그램 <strong>실행 시간</strong>에 발생하는 에러 = <strong>예외(exception)</strong><br>
+        처리 구문: <strong>try / catch / finally</strong><br>
+        catch 블록 = <strong>예외 처리 블록</strong>
+      </div>
+      <div class="code"><span class="kw">try</span> {<br>
+  <span class="cm">// 예외 발생 가능 코드</span><br>
+} <span class="kw">catch</span> (<span class="ty">Exception</span> e) {<br>
+  <span class="cm">// 예외 처리</span><br>
+} <span class="kw">finally</span> {<br>
+  <span class="cm">// 항상 실행</span><br>
+}</div>
+    </div>
+    <div class="concept-card orange fade-in" data-search="멀티스레드 thread run concurrent 동시성">
+      <div class="concept-label label-orange">멀티스레드</div>
+      <div class="concept-term">Concurrent Programming<span class="tag tag-exam">시험출제</span></div>
+      <div class="concept-def">
+        동시에 여러 작업을 처리하는 <strong>멀티스레드</strong> 지원<br>
+        스레드 행위의 핵심 메소드: <strong>run()</strong> (main() 아님!)<br>
+        장점: 공유 힙·데이터·코드 → <strong>경량 프로세스(문맥 전환)</strong>
+      </div>
+    </div>
+    <div class="concept-card blue fade-in" data-search="제네릭 generic 자료형 매개변수 클래스 인터페이스 메소드">
+      <div class="concept-label label-blue">제네릭</div>
+      <div class="concept-term">제네릭 프로그래밍<span class="tag tag-key">핵심</span></div>
+      <div class="concept-def">
+        <strong>자료형을 매개변수</strong>처럼 다루는 기능<br>
+        적용 단위: <strong>클래스, 인터페이스, 메소드</strong><br>
+        예) <code style="color:var(--accent4)">List&lt;String&gt;</code> — String이 자료형 매개변수
+      </div>
+    </div>
+    <div class="concept-card green fade-in" data-search="기본형 primitive byte short int long float double char boolean 8개">
+      <div class="concept-label label-green">기본형</div>
+      <div class="concept-term">기본형(Primitive Type) 8개<span class="tag tag-exam">시험출제</span></div>
+      <div class="concept-def">
+        <strong>숫자형</strong>: byte, short, int, long, float, double<br>
+        <strong>문자형</strong>: char (16비트 유니코드)<br>
+        <strong>논리형</strong>: boolean (true/false만)
+      </div>
+      <div class="highlight-box warn" style="margin-top:10px">
+        ⚠️ <strong>String은 기본형이 아니야!</strong> — String은 클래스(참조형)이야.
+      </div>
+    </div>
+    <div class="concept-card red fade-in" data-search="포인터 pointer 지원안함 자바 차이">
+      <div class="concept-label label-red">자바 ≠ C/C++</div>
+      <div class="concept-term">자바에서 지원하지 않는 것<span class="tag tag-exam">시험출제</span></div>
+      <div class="concept-def">
+        ❌ <strong>포인터(Pointer) 직접 조작</strong> 미지원<br>
+        → 대신 참조(reference) 개념 사용<br>
+        ❌ <strong>unsigned 정수형</strong> 미지원<br>
+        → 대신 <strong>&gt;&gt;&gt;</strong> (부호 없는 오른쪽 이동) 연산자 추가
+      </div>
+    </div>
+    <div class="concept-card purple fade-in" data-search="속도 JIT Back-End Java Chip 실행속도 개선">
+      <div class="concept-label label-purple">성능</div>
+      <div class="concept-term">실행 속도 개선 방법<span class="tag tag-exam">시험출제</span></div>
+      <div class="concept-def">
+        ✅ <strong>JIT Compilation</strong> (Just-In-Time)<br>
+        ✅ <strong>Back-End</strong> 최적화<br>
+        ✅ <strong>Java Chip</strong> (전용 하드웨어)<br><br>
+        ❌ <strong>Decompilation</strong> — 실행속도 개선과 무관!
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">📦 기본 패키지</div>
+  <div class="concept-grid">
+    <div class="concept-card wide-card blue fade-in" data-search="패키지 java.lang java.io java.util java.applet java.awt javax.swing">
+      <div class="concept-label label-blue">기본 패키지</div>
+      <div class="concept-term">주요 표준 패키지</div>
+      <table class="concept-table">
+        <tr><th>패키지</th><th>내용</th></tr>
+        <tr><td>java.lang</td><td>가장 기본적인 클래스들 (String, Math, Object 등) — 자동 import</td></tr>
+        <tr><td>java.io</td><td>입출력 관련 클래스 (System.in/out 기반)</td></tr>
+        <tr><td>java.util</td><td>다양한 유틸리티 클래스 (List, Map, Random 등)</td></tr>
+        <tr><td>java.applet</td><td>애플릿 관련</td></tr>
+        <tr><td>java.awt / javax.swing</td><td>GUI 컴포넌트</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ── 2과 ── -->
+<section class="chapter" id="ch-2">
+  <div class="chapter-header">
+    <div class="chapter-icon" style="background:rgba(63,185,80,0.12);color:var(--accent2)">🔤</div>
+    <div>
+      <div class="chapter-title">2과 · 어휘 구조와 자료형</div>
+      <div class="chapter-sub">토큰, 식별자, 자료형, 리터럴, 배열, 열거형</div>
+    </div>
+  </div>
+
+  <div class="section-title">🔤 어휘 구조</div>
+  <div class="concept-grid">
+    <div class="concept-card green fade-in" data-search="토큰 token 최소단위 키워드 식별자 연산자 구분자 상수">
+      <div class="concept-label label-green">기본 개념</div>
+      <div class="concept-term">토큰(Token)<span class="tag tag-key">핵심</span></div>
+      <div class="concept-def">
+        문법적으로 <strong>의미를 갖는 최소 단위</strong><br>
+        종류: 키워드, 식별자, 연산자, <strong>구분자(delimiter)</strong>, 상수<br><br>
+        예) <code style="font-family:monospace;color:var(--accent4)">sum += i++;</code> → 토큰 <strong>5개</strong><br>
+        <small style="color:var(--text3)">(sum / += / i / ++ / ;)</small>
+      </div>
+    </div>
+    <div class="concept-card green fade-in" data-search="식별자 identifier 명칭 문자 언더스코어 달러 숫자">
+      <div class="concept-label label-green">식별자</div>
+      <div class="concept-term">식별자(Identifier) 규칙<span class="tag tag-exam">시험출제</span></div>
+      <div class="concept-def">
+        시작 가능: <strong>문자, _ (밑줄), $ (달러)</strong><br>
+        시작 불가: 숫자, #, &amp;, 공백<br>
+        대소문자 구분 / 길이 제한 없음<br><br>
+        ✅ <code style="font-family:monospace;color:var(--accent2)">$sum</code>, <code style="font-family:monospace;color:var(--accent2)">_count</code>, <code style="font-family:monospace;color:var(--accent2)">myVar123</code><br>
+        ❌ <code style="font-family:monospace;color:var(--accent5)">1sum</code>, <code style="font-family:monospace;color:var(--accent5)">#name</code>, <code style="font-family:monospace;color:var(--accent5)">money sum</code>
+      </div>
+    </div>
+    <div class="concept-card blue fade-in" data-search="키워드 지정어 keyword sizeof goto const 사용안함">
+      <div class="concept-label label-blue">키워드</div>
+      <div class="concept-term">주요 지정어(Keyword) 주의사항<span class="tag tag-exam">시험출제</span></div>
+      <div class="concept-def">
+        <strong>사용되지 않는 예약어</strong>: <code style="font-family:monospace;color:var(--accent4)">goto</code>, <code style="font-family:monospace;color:var(--accent4)">const</code><br>
+        (예약만 되어 있고 실제 사용 안 함)<br><br>
+        ❌ <code style="font-family:monospace;color:var(--accent5)">sizeof</code> — 자바 지정어 아님! (C 스타일)<br><br>
+        <strong>s 붙는 키워드</strong>: extends, implements, throws
+      </div>
+    </div>
+    <div class="concept-card purple fade-in" data-search="주석 comment 슬래시 자바독 블록">
+      <div class="concept-label label-purple">주석</div>
+      <div class="concept-term">주석 표기 방법<span class="tag tag-exam">시험출제</span></div>
+      <div class="concept-def">
+        <strong>// ...</strong> — 한 줄 주석<br>
+        <strong>/* ... */</strong> — 여러 줄 블록 주석<br>
+        <strong>/** ... */</strong> — Javadoc 문서 주석<br><br>
+        ❌ <code style="font-family:monospace;color:var(--accent5)">(* ... *)</code> — 자바 주석 아님! (파스칼 스타일)
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">📊 자료형 체계</div>
+  <div class="concept-grid">
+    <div class="concept-card wide-card green fade-in" data-search="자료형 기본형 참조형 primitive reference 분류">
+      <div class="concept-label label-green">자료형 분류</div>
+      <div class="concept-term">자바 자료형 전체 구조<span class="tag tag-key">핵심</span></div>
+      <div class="compare-grid">
+        <div class="compare-side">
+          <h4 style="color:var(--accent2)">기본형 (Primitive) — 8개</h4>
+          <ul>
+            <li>byte (8비트)</li>
+            <li>short (16비트)</li>
+            <li>int (32비트) ← 정수 기본</li>
+            <li>long (64비트)</li>
+            <li>float (32비트)</li>
+            <li>double (64비트) ← 실수 기본</li>
+            <li>char (16비트, 유니코드)</li>
+            <li>boolean (true/false)</li>
+          </ul>
+        </div>
+        <div class="compare-side">
+          <h4 style="color:var(--accent1)">참조형 (Reference)</h4>
+          <ul>
+            <li>클래스 타입 (String 포함)</li>
+            <li>배열 타입</li>
+            <li>인터페이스 타입</li>
+            <li>열거형(enum)</li>
+          </ul>
+          <div style="margin-top:8px;font-size:0.82rem;color:var(--accent5)">
+            ⚠️ String은 참조형!<br>
+            ⚠️ char(기본형) vs String(참조형)
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="concept-card blue fade-in" data-search="int 범위 32비트 signed 정수">
+      <div class="concept-label label-blue">int 범위</div>
+      <div class="concept-term">int 형의 범위<span class="tag tag-exam">시험출제</span></div>
+      <div class="concept-def">
+        32비트 signed 정수<br>
+        범위: <strong>-2³¹ ~ 2³¹-1</strong><br><br>
+        ⚠️ 음수 쪽이 1 더 커! (-2147483648 ~ 2147483647)
+      </div>
+    </div>
+
+    <div class="concept-card red fade-in" data-search="boolean 논리형 변환 안됨 다른 자료형">
+      <div class="concept-label label-red">boolean 특별 규칙</div>
+      <div class="concept-term">boolean의 변환 불가<span class="tag tag-exam">시험출제</span></div>
+      <div class="concept-def">
+        boolean은 <strong>다른 형으로 절대 변환 불가!</strong><br>
+        숫자형처럼 캐스팅 안 됨 (1 → true 같은 것 불가)<br>
+        오직 <code style="font-family:monospace;color:var(--accent2)">true</code>와 <code style="font-family:monospace;color:var(--accent2)">false</code>만 존재
+      </div>
+    </div>
+
+    <div class="concept-card orange fade-in" data-search="byte short int 승격 promotion 계산 결과">
+      <div class="concept-label label-orange">수치 승격</div>
+      <div class="concept-term">byte/short 연산 결과<span class="tag tag-exam">시험출제</span></div>
+      <div class="concept-def">
+        byte, short 끼리 계산하면 결과는 <strong>int로 자동 승격!</strong><br><br>
+        <code style="font-family:monospace;color:var(--accent4)">byte b1=10, b2=20;</code><br>
+        <code style="font-family:monospace;color:var(--accent4)">int result = b1 + b2; // OK</code><br>
+        <code style="font-family:monospace;color:var(--accent5)">byte b3 = b1 + b2; // 에러!</code>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">📝 리터럴</div>
+  <div class="concept-grid">
+    <div class="concept-card green fade-in" data-search="리터럴 literal 표기 자신의 값 상수">
+      <div class="concept-label label-green">리터럴</div>
+      <div class="concept-term">리터럴(Literal)이란?</div>
+      <div class="concept-def">
+        <strong>자신의 표기법이 곧 자신의 값</strong>이 되는 상수<br><br>
+        <strong>정수 리터럴</strong>: 기본형 int<br>
+        → 16진수: <code style="font-family:monospace;color:var(--accent4)">0xff</code> = 255<br>
+        → 8진수: <code style="font-family:monospace;color:var(--accent4)">0377</code><br><br>
+        <strong>실수 리터럴</strong>: 기본형 <strong>double</strong><br>
+        → float는 뒤에 f/F 붙여야 함: <code style="font-family:monospace;color:var(--accent4)">3.14f</code>
+      </div>
+    </div>
+    <div class="concept-card purple fade-in" data-search="이스케이프 escape 문자 특수 tab newline 백슬래시">
+      <div class="concept-label label-purple">이스케이프</div>
+      <div class="concept-term">주요 이스케이프 문자<span class="tag tag-exam">시험출제</span></div>
+      <table class="concept-table">
+        <tr><th>표기</th><th>의미</th><th>유니코드</th></tr>
+        <tr><td>\t</td><td>탭(Tab)</td><td>\u0009</td></tr>
+        <tr><td>\n</td><td>줄바꿈(Newline)</td><td>\u000A</td></tr>
+        <tr><td>\r</td><td>캐리지 리턴</td><td>\u000D</td></tr>
+        <tr><td>\\</td><td>역슬래시</td><td>\u005C</td></tr>
+        <tr><td>\"</td><td>큰따옴표</td><td>\u0022</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-title">📚 배열과 열거형</div>
+  <div class="concept-grid">
+    <div class="concept-card blue fade-in" data-search="배열 array new length IndexOutOfBoundsException 인덱스 동적">
+      <div class="concept-label label-blue">배열</div>
+      <div class="concept-term">배열(Array) 핵심 규칙<span class="tag tag-key">핵심</span></div>
+      <div class="concept-def">
+        배열은 <strong>객체</strong> → <strong>new</strong>로 동적 생성<br>
+        인덱스: <strong>0부터</strong> 시작<br>
+        길이: <strong>.length 필드</strong> (메소드 아님!)<br>
+        범위 초과 시: <strong>IndexOutOfBoundsException</strong><br><br>
+        ❌ 틀린 선언: <code style="font-family:monospace;color:var(--accent5)">int bb[5] = {...};</code> (C 스타일)<br>
+        ✅ 맞는 선언: <code style="font-family:monospace;color:var(--accent2)">int[] bb = {0,1,2,3,4};</code>
+      </div>
+    </div>
+    <div class="concept-card orange fade-in" data-search="열거형 enum values ordinal valueOf Enum 클래스">
+      <div class="concept-label label-orange">열거형</div>
+      <div class="concept-term">열거형(Enum) 핵심 메소드<span class="tag tag-exam">시험출제</span></div>
+      <div class="concept-def">
+        묵시적으로 <strong>Enum 클래스</strong> 기반<br><br>
+        <strong>values()</strong> — 모든 원소 배열 반환<br>
+        <strong>ordinal()</strong> — 원소의 열거 순서(0부터) 반환<br>
+        <strong>valueOf(String)</strong> — 문자열 → 열거형 원소 변환<br><br>
+        출력 시 원소의 <strong>이름(name)</strong>이 출력됨 → 디버깅에 유용
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 3과 ── -->
+<section class="chapter" id="ch-3">
+  <div class="chapter-header">
+    <div class="chapter-icon" style="background:rgba(210,168,255,0.12);color:var(--accent3)">⚡</div>
+    <div>
+      <div class="chapter-title">3과 · 연산자</div>
+      <div class="chapter-sub">산술·관계·논리·비트·증감·캐스트·형변환</div>
+    </div>
+  </div>
+
+  <div class="section-title">🧮 연산자 기본</div>
+  <div class="concept-grid">
+    <div class="concept-card purple fade-in" data-search="연산자 43개 개수 종류 피연산자 식">
+      <div class="concept-label label-purple">개요</div>
+      <div class="concept-term">자바 연산자 총 43개<span class="tag tag-exam">시험출제</span></div>
+      <div class="concept-def">
+        자바에서 제공하는 연산자 수: <strong>43개</strong><br>
+        식 = 연산자 + 피연산자로 구성<br>
+        종류: 산술식, 관계식, <strong>논리식</strong> 등<br><br>
+        ❌ <code style="font-family:monospace;color:var(--accent5)">$</code> — 연산자 아님! (식별자 문자)
+      </div>
+    </div>
+    <div class="concept-card purple fade-in" data-search="우선순위 precedence 결합 associativity 좌측 우측">
+      <div class="concept-label label-purple">우선순위·결합</div>
+      <div class="concept-term">연산자 우선순위 대원칙<span class="tag tag-key">핵심</span></div>
+      <div class="concept-def">
+        높음 → 낮음 순서:<br>
+        <strong>단항</strong>(!, 전위증감, cast) → <strong>산술</strong>(*,/,%) → <strong>산술</strong>(+,-) → <strong>이동</strong>(shift) → <strong>관계</strong>(&gt;,&lt;) → <strong>항등</strong>(==,!=) → <strong>비트AND</strong>(&) → <strong>비트XOR</strong>(^) → <strong>비트OR</strong>(|) → <strong>논리AND</strong>(&&) → <strong>논리OR</strong>(||) → <strong>삼항</strong>(?:) → <strong>배정</strong>(=)<br><br>
+        <strong>우측 결합</strong>: <code style="font-family:monospace;color:var(--accent3)">++</code>(전위증감), 배정문(=), 삼항(?:), cast
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">⚖️ 관계·논리 연산자</div>
+  <div class="concept-grid">
+    <div class="concept-card blue fade-in" data-search="관계연산자 비교 산술 우선순위 관계식 결과 true false">
+      <div class="concept-label label-blue">관계 연산자</div>
+      <div class="concept-term">관계 연산자 핵심 규칙<span class="tag tag-exam">시험출제</span></div>
+      <div class="concept-def">
+        관계식 결과: 항상 <strong>true 또는 false</strong><br>
+        우선순위: <strong>산술 &gt; 관계 &gt; 논리</strong> 순<br>
+        (산술이 먼저, 관계 비교 다음, 논리 결합 마지막)<br><br>
+        <strong>항등 연산자</strong>(==, !=)는 비교 연산자보다 우선순위 낮음<br><br>
+        ❌ "관계 연산자가 산술보다 우선순위 높다" — 틀린 말!
+      </div>
+    </div>
+    <div class="concept-card blue fade-in" data-search="NaN 실수 무한 Infinity 0.0 나누기 특수값">
+      <div class="concept-label label-blue">특수 실수값</div>
+      <div class="concept-term">실수 연산의 특수값<span class="tag tag-exam">시험출제</span></div>
+      <div class="concept-def">
+        <code style="font-family:monospace;color:var(--accent4)">양수 / 0.0</code> → <strong>Infinity (무한대)</strong><br>
+        <code style="font-family:monospace;color:var(--accent4)">0.0 / 0.0</code> → <strong>NaN (Not a Number)</strong><br><br>
+        NaN과 Infinity는 구분해야 해!<br>
+        NaN == NaN → <strong>false</strong> (NaN은 자기 자신과도 같지 않음)
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">🔢 비트 연산자</div>
+  <div class="concept-grid">
+    <div class="concept-card wide-card purple fade-in" data-search="비트 AND OR XOR NOT shift 이동 연산자">
+      <div class="concept-label label-purple">비트 연산</div>
+      <div class="concept-term">비트 연산자 완전 정리<span class="tag tag-exam">시험출제</span></div>
+      <table class="concept-table">
+        <tr><th>연산자</th><th>이름</th><th>규칙</th><th>예시 (7₁₀ op 2₁₀)</th></tr>
+        <tr><td>&amp;</td><td>AND</td><td>둘 다 1이면 1</td><td>111 &amp; 010 = 010 = <strong>2</strong></td></tr>
+        <tr><td>|</td><td>OR</td><td>하나라도 1이면 1</td><td>111 | 010 = 111 = <strong>7</strong></td></tr>
+        <tr><td>^</td><td>XOR</td><td>서로 다르면 1</td><td>111 ^ 010 = 101 = <strong>5</strong> ✅</td></tr>
+        <tr><td>~</td><td>NOT</td><td>비트 반전</td><td>~7 = -8</td></tr>
+        <tr><td>&lt;&lt;</td><td>왼쪽 이동</td><td>×2 효과</td><td>7 &lt;&lt; 1 = 14</td></tr>
+        <tr><td>&gt;&gt;</td><td>오른쪽 이동</td><td>÷2, 부호 유지</td><td>7 &gt;&gt; 1 = 3</td></tr>
+        <tr><td>&gt;&gt;&gt;</td><td>부호없는 오른쪽</td><td>÷2, 항상 0 채움</td><td>(자바 특유 연산자)</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-title">🔄 전위 vs 후위 증감</div>
+  <div class="concept-grid">
+    <div class="concept-card orange fade-in" data-search="전위 후위 증감 prefix postfix 증가 감소 값 차이">
+      <div class="concept-label label-orange">증감 연산자</div>
+      <div class="concept-term">전위(prefix) vs 후위(postfix)<span class="tag tag-key">핵심</span></div>
+      <div class="concept-def">
+        <strong>전위(++i)</strong>: <strong>먼저 증가</strong> → 증가된 값으로 연산<br>
+        <strong>후위(i++)</strong>: 현재 값으로 연산 → <strong>나중에 증가</strong>
+      </div>
+      <div class="code"><span class="ty">int</span> i = <span class="val">5</span>;<br>
+<span class="ty">int</span> a = ++i; <span class="cm">// a=6, i=6</span><br>
+<span class="ty">int</span> b = i++; <span class="cm">// b=6, i=7</span></div>
+      <div class="highlight-box warn" style="margin-top:10px">
+        ⚠️ "후위가 전위보다 빠르다" — 틀린 말! 속도 차이는 없어.
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">🔃 형 변환</div>
+  <div class="concept-grid">
+    <div class="concept-card green fade-in" data-search="widening 확장 묵시적 형변환 작은 큰 자동">
+      <div class="concept-label label-green">확장 변환</div>
+      <div class="concept-term">묵시적 형 변환 (Widening)<span class="tag tag-key">핵심</span></div>
+      <div class="concept-def">
+        작은 형 → 큰 형: <strong>자동 변환</strong><br>
+        정보 손실 없음 (작은 컵 → 큰 컵으로 옮기는 느낌)<br><br>
+        byte → short → int → long → float → double<br>
+        char → int
+      </div>
+      <div class="highlight-box success" style="margin-top:10px">
+        ✅ <code style="font-family:monospace">int → double → int</code> 는 정보 손실 없어!<br>
+        ⚠️ <code style="font-family:monospace">long → double → long</code> 은 정밀도 손실 가능!
+      </div>
+    </div>
+    <div class="concept-card red fade-in" data-search="narrowing 협소화 명시적 캐스트 형변환 손실 float long">
+      <div class="concept-label label-red">협소화 변환</div>
+      <div class="concept-term">명시적 형 변환 (Narrowing)<span class="tag tag-exam">시험출제</span></div>
+      <div class="concept-def">
+        큰 형 → 작은 형: <strong>명시적 캐스팅 필요</strong><br>
+        정보 손실 발생 가능!<br><br>
+        <strong>float → long</strong> ← 협소화! (실수 → 정수, 소수 잘림)<br>
+        <code style="font-family:monospace;color:var(--accent5)">int i; float f; long l;</code><br>
+        <code style="font-family:monospace;color:var(--accent5)">l = f + i; // 컴파일 에러!</code>
+      </div>
+    </div>
+    <div class="concept-card purple fade-in" data-search="boxing unboxing 오토박싱 래퍼 Integer int 기본형 참조형 변환">
+      <div class="concept-label label-purple">오토박싱</div>
+      <div class="concept-term">Boxing / Unboxing<span class="tag tag-key">핵심</span></div>
+      <div class="concept-def">
+        <strong>Boxing</strong>: 기본형 → 참조형(래퍼 클래스) 자동 변환<br>
+        <strong>Unboxing</strong>: 참조형 → 기본형 자동 변환<br><br>
+        예) <code style="font-family:monospace;color:var(--accent3)">int</code> ↔ <code style="font-family:monospace;color:var(--accent3)">Integer</code><br>
+        컬렉션(List, Map 등)에서 특히 중요!
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 4과 ── -->
+<section class="chapter" id="ch-4">
+  <div class="chapter-header">
+    <div class="chapter-icon" style="background:rgba(255,166,87,0.12);color:var(--accent4)">🔀</div>
+    <div>
+      <div class="chapter-title">4과 · 제어문</div>
+      <div class="chapter-sub">조건문, 반복문, 분기문, 입출력</div>
+    </div>
+  </div>
+
+  <div class="section-title">📋 제어문 분류</div>
+  <div class="concept-grid">
+    <div class="concept-card wide-card orange fade-in" data-search="제어문 조건문 반복문 분기문 종류 분류 if for while">
+      <div class="concept-label label-orange">분류</div>
+      <div class="concept-term">자바 제어문 전체 구조<span class="tag tag-key">핵심</span></div>
+      <table class="concept-table">
+        <tr><th>분류</th><th>문장 종류</th><th>핵심</th></tr>
+        <tr><td>조건문</td><td>if, switch</td><td>조건에 따라 실행 분기</td></tr>
+        <tr><td>반복문</td><td>for, while, do-while, 개선된 for</td><td>반복 실행</td></tr>
+        <tr><td>분기문</td><td>break, continue, return</td><td>흐름 제어 (goto 없음!)</td></tr>
+      </table>
+      <div class="highlight-box warn" style="margin-top:12px">
+        ⚠️ <strong>if는 분기문이 아니라 조건문!</strong> — 자주 나오는 함정이야.<br>
+        ⚠️ <strong>입출력문은 자바 문장이 아니라 메소드!</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">🔁 반복문</div>
+  <div class="concept-grid">
+    <div class="concept-card orange fade-in" data-search="for 문 초기화 테스트 수정 반복 몸체 4부분">
+      <div class="concept-label label-orange">for 문</div>
+      <div class="concept-term">for 문의 4가지 부분<span class="tag tag-exam">시험출제</span></div>
+      <div class="concept-def">
+        <strong>① 초기화</strong> — 루프 시작 전 <strong>한 번만</strong> 실행<br>
+        <strong>② 테스트(검사)</strong> — 반복마다 조건 확인<br>
+        <strong>③ 반복 몸체</strong> — 조건 참이면 실행<br>
+        <strong>④ 수정</strong> — 몸체 실행 후 실행
+      </div>
+      <div class="code"><span class="kw">for</span> (초기화; 테스트; 수정) {<br>
+  반복 몸체;<br>
+}<br>
+<span class="cm">// 무한 루프</span><br>
+<span class="kw">for</span> ( ; ; ) { ... } <span class="cm">// ← 이 형태!</span></div>
+    </div>
+    <div class="concept-card orange fade-in" data-search="do while 조건 거짓 최소 한번 반복">
+      <div class="concept-label label-orange">do-while 문</div>
+      <div class="concept-term">do-while의 특징<span class="tag tag-exam">시험출제</span></div>
+      <div class="concept-def">
+        조건이 <strong>거짓이어도 몸체를 최소 1번 실행!</strong><br>
+        (조건 검사를 뒤에서 하기 때문)
+      </div>
+      <div class="code"><span class="kw">do</span> {<br>
+  반복 몸체; <span class="cm">// 최소 1번 실행</span><br>
+} <span class="kw">while</span> (조건식);</div>
+    </div>
+  </div>
+
+  <div class="section-title">🚪 분기문</div>
+  <div class="concept-grid">
+    <div class="concept-card blue fade-in" data-search="break continue 차이 루프 탈출 스킵 반복">
+      <div class="concept-label label-blue">break vs continue</div>
+      <div class="concept-term">break / continue 차이<span class="tag tag-key">핵심</span></div>
+      <div class="compare-grid">
+        <div class="compare-side">
+          <h4 style="color:var(--accent5)">break</h4>
+          <ul><li>루프 <strong>완전 탈출</strong></li><li>switch에서도 사용</li><li>가장 가까운 루프 종료</li></ul>
+        </div>
+        <div class="compare-side">
+          <h4 style="color:var(--accent2)">continue</h4>
+          <ul><li>이번 반복만 <strong>건너뜀</strong></li><li>다음 반복 계속</li><li>for/while/do-while에서만</li></ul>
+        </div>
+      </div>
+      <div class="highlight-box warn" style="margin-top:10px">
+        ⚠️ continue는 <strong>switch 문 안에서는 사용 불가!</strong> (교과서 기준)
+      </div>
+    </div>
+    <div class="concept-card blue fade-in" data-search="return 반환 메소드 종료 제어 호출자">
+      <div class="concept-label label-blue">return 문</div>
+      <div class="concept-term">return 문의 의미</div>
+      <div class="concept-def">
+        <strong>메소드 실행 종료</strong> + 호출자에게 제어 반환<br>
+        단순히 값만 돌려주는 게 아니라 <strong>메소드 자체를 끝냄!</strong><br><br>
+        void 메소드에서도 <code style="font-family:monospace;color:var(--accent4)">return;</code> 사용 가능
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">📥 입출력</div>
+  <div class="concept-grid">
+    <div class="concept-card wide-card green fade-in" data-search="입출력 java.io System.in System.out println printf write read">
+      <div class="concept-label label-green">입출력</div>
+      <div class="concept-term">자바 입출력 핵심 정리<span class="tag tag-key">핵심</span></div>
+      <div class="compare-grid">
+        <div class="compare-side">
+          <h4 style="color:var(--accent2)">출력 메소드 ✅</h4>
+          <ul>
+            <li>System.out.print()</li>
+            <li>System.out.println()</li>
+            <li>System.out.printf()</li>
+            <li>System.out.write()</li>
+          </ul>
+          <div style="margin-top:8px;font-size:0.82rem;color:var(--accent5)">
+            ❌ writeln() — 존재하지 않아!
+          </div>
+        </div>
+        <div class="compare-side">
+          <h4 style="color:var(--accent1)">입력 메소드</h4>
+          <ul>
+            <li>System.in.read() — 문자 1개 int 코드값으로</li>
+            <li>끝 도달 시 -1 반환</li>
+            <li>숫자 읽으려면 '0'의 코드(48) 빼기</li>
+          </ul>
+        </div>
+      </div>
+      <div class="highlight-box" style="margin-top:12px">
+        📦 입출력 패키지: <strong>java.io</strong><br>
+        in, out, err는 모두 <strong>System 클래스의 정적 변수</strong>
+      </div>
+    </div>
+
+    <div class="concept-card orange fade-in" data-search="printf 형식 지정자 %d %f %s %g 플래그 왼쪽정렬 콤마">
+      <div class="concept-label label-orange">printf 형식</div>
+      <div class="concept-term">printf 형식 지정자<span class="tag tag-exam">시험출제</span></div>
+      <table class="concept-table">
+        <tr><th>지정자</th><th>의미</th></tr>
+        <tr><td>%d</td><td>정수 (10진수)</td></tr>
+        <tr><td>%f</td><td>실수 (고정 소수점)</td></tr>
+        <tr><td>%e</td><td>실수 (지수 형태)</td></tr>
+        <tr><td>%g</td><td>실수 (적절한 형태 자동 선택)</td></tr>
+        <tr><td>%s</td><td>문자열</td></tr>
+        <tr><td>%c</td><td>문자</td></tr>
+      </table>
+      <div class="concept-def" style="margin-top:10px">
+        <strong>플래그</strong>: <code style="font-family:monospace;color:var(--accent4)">-</code> 왼쪽 정렬 / <code style="font-family:monospace;color:var(--accent4)">,</code> 세 자리마다 콤마
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 5과 ── -->
+<section class="chapter" id="ch-5">
+  <div class="chapter-header">
+    <div class="chapter-icon" style="background:rgba(255,123,114,0.12);color:var(--accent5)">🏗️</div>
+    <div>
+      <div class="chapter-title">5과 · 클래스</div>
+      <div class="chapter-sub">클래스 구조, 접근 지정자, 메소드, 생성자, 중첩 클래스</div>
+    </div>
+  </div>
+
+  <div class="section-title">🧱 클래스 기본 구조</div>
+  <div class="concept-grid">
+    <div class="concept-card red fade-in" data-search="클래스 객체 new 필드 메소드 구조 행위 정의 단위">
+      <div class="concept-label label-red">클래스 개념</div>
+      <div class="concept-term">클래스란?<span class="tag tag-key">핵심</span></div>
+      <div class="concept-def">
+        객체의 <strong>구조(필드)</strong>와 <strong>행위(메소드)</strong>를 정의하는 기본 단위<br>
+        = 객체를 정의하는 <strong>템플릿(설계도)</strong><br>
+        → <strong>자료 추상화</strong> 개념 실현<br><br>
+        객체 생성: <code style="font-family:monospace;color:var(--accent4)">ClassName obj = new ClassName();</code>
+      </div>
+    </div>
+    <div class="concept-card red fade-in" data-search="접근지정자 public private protected 정보은닉 캡슐화">
+      <div class="concept-label label-red">접근 지정자</div>
+      <div class="concept-term">접근 수정자 3가지<span class="tag tag-exam">시험출제</span></div>
+      <table class="concept-table">
+        <tr><th>지정자</th><th>접근 범위</th></tr>
+        <tr><td>public</td><td>모든 클래스에서 접근 가능</td></tr>
+        <tr><td>protected</td><td>같은 패키지 + 서브클래스에서 가능</td></tr>
+        <tr><td>(package)</td><td>같은 패키지 안에서만 (기본값)</td></tr>
+        <tr><td>private</td><td>해당 클래스 안에서만</td></tr>
+      </table>
+      <div class="highlight-box warn" style="margin-top:10px">
+        ⚠️ <strong>package는 접근 지정어 키워드가 아니야!</strong> 기본값(default)일 때 적용됨<br>
+        ⚠️ package 접근은 <strong>서브클래스라도 다른 패키지면 안 됨!</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">🔧 필드와 메소드</div>
+  <div class="concept-grid">
+    <div class="concept-card blue fade-in" data-search="정적변수 static 클래스변수 공유 인스턴스변수">
+      <div class="concept-label label-blue">정적 vs 인스턴스</div>
+      <div class="concept-term">static 변수의 특성<span class="tag tag-key">핵심</span></div>
+      <div class="compare-grid">
+        <div class="compare-side">
+          <h4 style="color:var(--accent1)">정적 변수 (static)</h4>
+          <ul><li>클래스 전체가 <strong>공유</strong></li><li>메모리 1개만 존재</li><li>클래스명으로 접근</li></ul>
+        </div>
+        <div class="compare-side">
+          <h4 style="color:var(--accent3)">인스턴스 변수</h4>
+          <ul><li>객체마다 <strong>별도</strong> 존재</li><li>new 할 때마다 생성</li><li>객체명으로 접근</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="concept-card blue fade-in" data-search="필드 자격자 final volatile transient static">
+      <div class="concept-label label-blue">필드 자격자</div>
+      <div class="concept-term">필드에 쓰는 자격자<span class="tag tag-exam">시험출제</span></div>
+      <div class="concept-def">
+        <strong>final</strong> — 값 변경 불가 (상수)<br>
+        <strong>volatile</strong> — 상수 전파 등 최적화 방지 (다른 곳에서 값 바뀔 수 있음)<br>
+        <strong>static</strong> — 클래스 전체 공유<br>
+        <strong>transient</strong> — 직렬화 제외<br><br>
+        ❌ synchronized, native, abstract — 필드 자격자 아님!
+      </div>
+    </div>
+    <div class="concept-card green fade-in" data-search="시그니처 signature 메소드 이름 매개변수 반환형 오버로딩">
+      <div class="concept-label label-green">메소드 시그니처</div>
+      <div class="concept-term">시그니처(Signature) 구성<span class="tag tag-exam">시험출제</span></div>
+      <div class="concept-def">
+        시그니처 = <strong>메소드 이름</strong> + <strong>매개변수 개수</strong> + <strong>매개변수 형</strong><br><br>
+        ❌ <strong>반환형</strong>은 시그니처에 포함되지 않아!<br>
+        ❌ <strong>매개변수 이름</strong>도 시그니처 아님!<br><br>
+        오버로딩 구분: 컴파일러가 시그니처로 판단
+      </div>
+    </div>
+    <div class="concept-card green fade-in" data-search="형식 실 매개변수 formal actual parameter 호출">
+      <div class="concept-label label-green">매개변수</div>
+      <div class="concept-term">형식/실 매개변수</div>
+      <div class="concept-def">
+        <strong>형식 매개변수(formal)</strong> — 메소드 정의할 때 사용<br>
+        <strong>실 매개변수(actual)</strong> — 메소드 호출할 때 사용<br><br>
+        값 전달 방식: 기본형은 <strong>값 복사</strong>, 참조형은 <strong>참조 전달</strong><br>
+        메소드 안에서 변경 반영하려면 → <strong>객체의 참조</strong>를 매개변수로!
+      </div>
+    </div>
+    <div class="concept-card purple fade-in" data-search="toString 메소드 객체 문자열 변환 출력">
+      <div class="concept-label label-purple">toString()</div>
+      <div class="concept-term">toString() 메소드</div>
+      <div class="concept-def">
+        객체를 <strong>문자열로 변환</strong>하는 메소드<br>
+        출력 시 자동으로 호출됨!<br>
+        재정의(override)하면 원하는 형태로 출력 가능
+      </div>
+    </div>
+    <div class="concept-card purple fade-in" data-search="main 메소드 void public static String args 반환형">
+      <div class="concept-label label-purple">main() 메소드</div>
+      <div class="concept-term">main() 완전한 선언<span class="tag tag-exam">시험출제</span></div>
+      <div class="code"><span class="kw">public static</span> <span class="ty">void</span> main(<span class="ty">String</span>[] args) {<br>
+  <span class="cm">// 프로그램 시작점</span><br>
+}</div>
+      <div class="concept-def" style="margin-top:10px">
+        반환형: 항상 <strong>void</strong><br>
+        매개변수: 항상 <strong>String[]</strong> (String 배열)<br>
+        속성: <strong>public + static</strong><br>
+        클래스 이름 = 소스 파일 이름
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">🏗️ 생성자</div>
+  <div class="concept-grid">
+    <div class="concept-card wide-card red fade-in" data-search="생성자 constructor new 자동호출 반환형 없음 이름 클래스 초기화">
+      <div class="concept-label label-red">생성자</div>
+      <div class="concept-term">생성자(Constructor) 완전 정리<span class="tag tag-key">핵심</span></div>
+      <div class="compare-grid">
+        <div class="compare-side">
+          <h4 style="color:var(--accent5)">생성자의 특징</h4>
+          <ul>
+            <li>new 연산자로 객체 생성 시 <strong>자동 호출</strong></li>
+            <li>이름 = <strong>클래스 이름과 동일</strong></li>
+            <li><strong>반환형 없음</strong> (void도 안 씀!)</li>
+            <li>주 역할: 필드 <strong>초기화</strong></li>
+            <li>this()로 다른 생성자 호출 가능</li>
+          </ul>
+        </div>
+        <div class="compare-side">
+          <h4 style="color:var(--accent1)">실행 순서</h4>
+          <ul>
+            <li>1️⃣ <strong>정적 초기화문</strong> 실행</li>
+            <li>2️⃣ <strong>초기화문</strong> 실행</li>
+            <li>3️⃣ <strong>생성자</strong> 실행</li>
+          </ul>
+          <div style="font-size:0.82rem;color:var(--text3);margin-top:8px">클래스 차원 → 객체 차원 → 생성자 순</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">🌐 메모리와 가비지 수집</div>
+  <div class="concept-grid">
+    <div class="concept-card orange fade-in" data-search="힙 heap 객체 저장 동적 메모리 new">
+      <div class="concept-label label-orange">힙(Heap)</div>
+      <div class="concept-term">힙 메모리</div>
+      <div class="concept-def">
+        new로 생성된 모든 객체는 <strong>힙(heap)</strong>에 저장<br>
+        = 동적 기억 공간
+      </div>
+    </div>
+    <div class="concept-card orange fade-in" data-search="가비지 수집기 garbage collector 자동 메모리 회수 참조">
+      <div class="concept-label label-orange">가비지 수집기</div>
+      <div class="concept-term">Garbage Collector<span class="tag tag-key">핵심</span></div>
+      <div class="concept-def">
+        더 이상 <strong>참조되지 않는 객체</strong>를 자동으로 메모리에서 제거<br>
+        → 프로그래머가 직접 메모리 해제할 필요 없음!<br>
+        → 자바 자동 메모리 관리의 핵심
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">🪆 중첩 클래스</div>
+  <div class="concept-grid">
+    <div class="concept-card wide-card purple fade-in" data-search="중첩 내부 클래스 nested inner local 무명 anonymous 지역">
+      <div class="concept-label label-purple">중첩 클래스</div>
+      <div class="concept-term">중첩 클래스 종류 완전 정리<span class="tag tag-exam">시험출제</span></div>
+      <table class="concept-table">
+        <tr><th>종류</th><th>특징</th></tr>
+        <tr><td>중첩 클래스 / 내부 클래스</td><td>클래스 내에 정의된 클래스 (두 이름 모두 사용)</td></tr>
+        <tr><td>정적 중첩 클래스</td><td>static 선언 → 정적 변수 가질 수 있음</td></tr>
+        <tr><td>내부 클래스(비정적)</td><td>외부 클래스 객체를 통해서만 객체 생성 가능</td></tr>
+        <tr><td>지역 중첩 클래스</td><td>메소드나 혼합문(블록) 안에서 정의</td></tr>
+        <tr><td><strong>무명 클래스</strong></td><td>이름 없이 클래스 정의 + 객체 생성 동시에</td></tr>
+      </table>
+      <div class="highlight-box warn" style="margin-top:12px">
+        ⚠️ 교과서 표현은 <strong>"무명 클래스"</strong>야! (익명 클래스라고도 하지만 시험엔 무명으로!)
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">🗂️ 추상 자료형</div>
+  <div class="concept-grid">
+    <div class="concept-card blue fade-in" data-search="추상 자료형 ADT abstract data type 클래스 구조 연산">
+      <div class="concept-label label-blue">추상 자료형</div>
+      <div class="concept-term">추상 자료형(ADT)이란?</div>
+      <div class="concept-def">
+        언어 시스템에서 제공하는 기본형처럼, 프로그래머가 사용할 수 있도록 <strong>구조와 연산을 함께 정의한 자료형</strong><br><br>
+        클래스로 자료구조를 설계하는 개념과 직접 연결!
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<script>
+// ── DATA STORE for search ──
+const ALL_CARDS = [];
+
+function collectCards() {
+  document.querySelectorAll('.concept-card[data-search]').forEach(card => {
+    ALL_CARDS.push({
+      el: card,
+      text: (card.dataset.search || '') + ' ' + card.textContent,
+      chapter: card.closest('.chapter')?.id?.replace('ch-', '') || ''
+    });
+  });
+}
+
+// ── NAV SWITCHING ──
+const navBtns = document.querySelectorAll('.nav-btn');
+const chapters = document.querySelectorAll('.chapter');
+
+navBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const target = btn.dataset.chapter;
+    navBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    chapters.forEach(ch => {
+      ch.classList.toggle('visible', ch.id === 'ch-' + target);
+    });
+    // reset search if leaving all
+    if (target !== 'all') {
+      document.getElementById('searchInput').value = '';
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+});
+
+// ── SEARCH ──
+const searchInput = document.getElementById('searchInput');
+const searchResults = document.getElementById('searchResults');
+const searchEmpty = document.getElementById('searchEmpty');
+const searchPrompt = document.getElementById('searchPrompt');
+
+const CHAPTER_NAMES = { '1':'1과·자바개요', '2':'2과·어휘자료형', '3':'3과·연산자', '4':'4과·제어문', '5':'5과·클래스' };
+
+function doSearch(q) {
+  const query = q.trim().toLowerCase();
+  if (!query) {
+    searchResults.innerHTML = '';
+    searchEmpty.style.display = 'none';
+    searchPrompt.style.display = 'block';
+    return;
+  }
+  searchPrompt.style.display = 'none';
+  const terms = query.split(/\s+/);
+  const matches = ALL_CARDS.filter(item => {
+    const t = item.text.toLowerCase();
+    return terms.every(term => t.includes(term));
+  });
+  if (!matches.length) {
+    searchResults.innerHTML = '';
+    searchEmpty.style.display = 'block';
+    return;
+  }
+  searchEmpty.style.display = 'none';
+  const grid = document.createElement('div');
+  grid.className = 'concept-grid';
+  matches.forEach(item => {
+    const clone = item.el.cloneNode(true);
+    // add chapter badge
+    const chBadge = document.createElement('div');
+    chBadge.className = 'concept-label label-orange';
+    chBadge.style.marginBottom = '6px';
+    chBadge.textContent = CHAPTER_NAMES[item.chapter] || item.chapter + '과';
+    clone.prepend(chBadge);
+    grid.appendChild(clone);
+  });
+  searchResults.innerHTML = '';
+  searchResults.appendChild(grid);
+}
+
+searchInput.addEventListener('input', e => doSearch(e.target.value));
+
+// ── SCROLL REVEAL ──
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.08 });
+
+function observeCards() {
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+}
+
+// ── INIT ──
+collectCards();
+observeCards();
+
+// Trigger reveal for visible chapter on load
+document.querySelectorAll('.chapter.visible .fade-in').forEach((el, i) => {
+  setTimeout(() => el.classList.add('visible'), i * 40);
+});
+
+// Re-trigger on chapter switch
+navBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    setTimeout(() => {
+      const target = btn.dataset.chapter;
+      if (target !== 'all') {
+        const ch = document.getElementById('ch-' + target);
+        if (ch) {
+          ch.querySelectorAll('.fade-in:not(.visible)').forEach((el, i) => {
+            setTimeout(() => el.classList.add('visible'), i * 30);
+          });
+        }
+      }
+    }, 50);
+  });
+});
+</script>
+</body>
+</html>
